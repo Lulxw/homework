@@ -1,0 +1,125 @@
+#include <iostream>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+// 图的类定义
+class Graph {
+private:
+    int V; // 顶点数
+    int E; // 边数
+    vector<int> vertices; // 顶点信息
+    map<int, map<int, int>> edges; // 边的连接表
+
+public:
+    Graph(int V, int E) {
+        this->V = V;
+        this->E = E;
+
+        cout << "请输入顶点信息：";
+        for (int i = 0; i < V; i++) {
+            int v;
+            cin >> v;
+            vertices.push_back(v);
+        }
+
+        cout << "请输入边的两个顶点及所构边的权重：" << endl;
+        for (int i = 0; i < E; i++) {
+            int v1, v2, weight;
+            cin >> v1 >> v2 >> weight;
+            edges[v1][v2] = weight;
+        }
+    }
+
+    void display() {
+        cout << "连接表如下：" << endl;
+        for (auto it = edges.begin(); it != edges.end(); it++) {
+            int v1 = it->first;
+            cout << v1 << ": ";
+            for (auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+                int v2 = it2->first;
+                int weight = it2->second;
+                cout << v2 << "（" << weight << "） ";
+            }
+            cout << endl;
+        }
+    }
+
+    void insertVertex() {
+        int v;
+        cout << "请输入要插入的节点：";
+        cin >> v;
+        vertices.push_back(v);
+    }
+
+    void deleteVertex() {
+        int v;
+        cout << "请输入要删除的节点：";
+        cin >> v;
+        vertices.erase(remove(vertices.begin(), vertices.end(), v), vertices.end());
+        edges.erase(v);
+        for (auto it = edges.begin(); it != edges.end(); it++) {
+            it->second.erase(v);
+        }
+    }
+
+    void insertEdge() {
+        int v1, v2, weight;
+        cout << "请输入要插入的边的两个顶点及权重：";
+        cin >> v1 >> v2 >> weight;
+        edges[v1][v2] = weight;
+    }
+
+    void deleteEdge() {
+        int v1, v2;
+        cout << "请输入要删除的边的两个顶点：";
+        cin >> v1 >> v2;
+        edges[v1].erase(v2);
+    }
+};
+
+int main() {
+    int V, E;
+    cout << "请输入图的总顶点数和总边数：";
+    cin >> V >> E;
+
+    Graph graph(V, E);
+    graph.display();
+
+    int choice;
+    do {
+        cout << "请输入要进行的操作：" << endl;
+        cout << "1. 插入节点" << endl;
+        cout << "2. 删除节点" << endl;
+        cout << "3. 插入边" << endl;
+        cout << "4. 删除边" << endl;
+        cout << "0. 退出" << endl;
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            graph.insertVertex();
+            graph.display();
+            break;
+        case 2:
+            graph.deleteVertex();
+            graph.display();
+            break;
+        case 3:
+            graph.insertEdge();
+            graph.display();
+            break;
+        case 4:
+            graph.deleteEdge();
+            graph.display();
+            break;
+        case 0:
+            break;
+        default:
+            cout << "无效的选择，请重新输入！" << endl;
+        }
+    } while (choice != 0);
+
+    return 0;
+}
